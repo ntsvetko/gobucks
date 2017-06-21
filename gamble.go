@@ -1,9 +1,14 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+	"time"
+)
 
 func trueOrFalse() bool {
-	var i = rand.Intn(100)
+	seed := rand.NewSource(time.Now().UnixNano())
+	seededRand := rand.New(seed)
+	var i = seededRand.Intn(100)
 	if i < 50 {
 		return true
 	}
