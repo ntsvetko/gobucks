@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"gopkg.in/mgo.v2"
 )
 
@@ -12,7 +11,6 @@ func connectToMongo(uri string) *mgo.Session {
 	if err != nil {
 		panic(err)
 	}
-	defer session.Close()
 
 	fmt.Println("Connected to mongo")
 

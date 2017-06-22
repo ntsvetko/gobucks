@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
-
+	"fmt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"log"
 )
 
 type User struct {
@@ -15,10 +15,10 @@ type User struct {
 
 // creates and adds user to db, does NOT check if user already exists
 func createUser(name string, startingBalance int, userColl *mgo.Collection) (*User, error) {
-	user := User{name, []Transaction{}, startingBalance}
-
-	err := userColl.Insert(&user)
-	return &user, err
+	user := &User{name, []Transaction{}, startingBalance}
+	fmt.Println(user)
+	err := userColl.Insert(user)
+	return user, err
 }
 
 func findUser(name string, userColl *mgo.Collection) (*User, error) {
@@ -32,9 +32,9 @@ func findUser(name string, userColl *mgo.Collection) (*User, error) {
 func findOrCreateUser(name string, userColl *mgo.Collection) *User {
 	user, err := findUser(name, userColl)
 
-	if err != nil {
+	/*if err != nil {
 		log.Fatal(err)
-	}
+	}*/
 
 	if user != nil {
 		return user
