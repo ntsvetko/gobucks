@@ -3,14 +3,24 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"strconv"
-	//"gopkg.in/mgo.v2"
 	"os"
+	"strconv"
 	"strings"
 )
 
 func main() {
-	repl("natalie")
+	if len(os.Args) != 2 {
+		fmt.Println("usage: './gobucks <user>'")
+		return
+	}
+	username := os.Args[1]
+	session := connectToMongo("mongodb://localhost")
+	defer session.Close()
+	coll := getColl(session, "gobucks", "users")
+	fmt.Println(username)
+	user := findOrCreateUser(username, coll)
+	fmt.Println(user)
+	repl(user.name)
 }
 
 func repl(user string) {
