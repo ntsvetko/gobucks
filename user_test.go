@@ -3,6 +3,8 @@ package main
 import (
 	"testing"
 
+	"fmt"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -38,12 +40,14 @@ func TestCreateUser(test *testing.T) {
 		test.Fatalf("database error in createUser, error should be nil but was: %v", err)
 	}
 
+	fmt.Println("@createUser: user added: " + user.Name)
+
 	if user == nil {
 		test.Fatalf("createUser should return a user, but instead returned %v", err)
 	}
 
-	if (*user).name != userName {
-		test.Fatalf("user returned was expected to be "+userName+" but was %v", (*user).name)
+	if (*user).Name != userName {
+		test.Fatalf("user returned was expected to be "+userName+" but was %v", (*user).Name)
 	}
 
 	result := User{}
@@ -53,7 +57,7 @@ func TestCreateUser(test *testing.T) {
 		test.Fatalf("database error in createUser, error should be nil but was: %v", resErr)
 	}
 
-	if result.name != userName {
-		test.Fatalf("user returned was expected to be "+userName+" but was %v", result.name)
+	if result.Name != userName {
+		test.Fatalf("user returned was expected to be "+userName+" but was %v", result.Name)
 	}
 }

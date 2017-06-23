@@ -1,29 +1,29 @@
 package main
 
 import (
-	"fmt"
+	"log"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"log"
 )
 
 type User struct {
-	name               string
-	transactionHistory []Transaction
-	currAmount         int
+	Name               string
+	TransactionHistory []Transaction
+	CurrAmount         int
 }
 
 // creates and adds user to db, does NOT check if user already exists
 func createUser(name string, startingBalance int, userColl *mgo.Collection) (*User, error) {
-	user := &User{name, []Transaction{}, startingBalance}
-	fmt.Println(user)
-	err := userColl.Insert(user)
-	return user, err
+	user := User{name, []Transaction{}, startingBalance}
+	err := userColl.Insert(&User{name, []Transaction{}, startingBalance})
+
+	return &user, err
 }
 
 func findUser(name string, userColl *mgo.Collection) (*User, error) {
 	user := User{}
-	err := userColl.Find(bson.M{"name": name}).One(&user)
+	err := userColl.Find(bson.M{"Name": name}).One(&user)
 
 	return &user, err
 }

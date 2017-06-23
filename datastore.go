@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+
 	"gopkg.in/mgo.v2"
 )
 
+// method that calls this needs to close session when done
 func connectToMongo(uri string) *mgo.Session {
 	session, err := mgo.Dial(uri)
 

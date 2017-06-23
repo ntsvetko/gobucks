@@ -20,7 +20,7 @@ func main() {
 	fmt.Println(username)
 	user := findOrCreateUser(username, coll)
 	fmt.Println(user)
-	repl(user.name)
+	repl(user.Name)
 }
 
 func repl(user string) {
