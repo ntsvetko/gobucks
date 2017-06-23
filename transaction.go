@@ -6,3 +6,7 @@ type Transaction struct {
 	result        bool
 	amountAfter   int
 }
+
+func seedUsers() {
+
+}

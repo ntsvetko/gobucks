@@ -5,29 +5,8 @@ import (
 
 	"fmt"
 
-	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
-
-type dbConfig struct {
-	uri      string
-	dbName   string
-	collName string
-}
-
-func getDbConfig() dbConfig {
-	dbConf := dbConfig{"localhost:27017", "test", "users"}
-
-	return dbConf
-}
-
-func initResetDB() (dbConfig, *mgo.Session) {
-	dbConf := getDbConfig()
-	session := connectToMongo(dbConf.uri)
-
-	session.DB(dbConf.dbName).DropDatabase()
-	return dbConf, session
-}
 
 func TestCreateUser(test *testing.T) {
 	dbConf, session := initResetDB()
@@ -90,7 +69,7 @@ func TestFindUser(test *testing.T) {
 func TestFindOrCreateUser(test *testing.T) {
 	dbConf, session := initResetDB()
 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
-	names := []string{"jae", "marcus", "isaiah", "jonas", "kelly", "jordan", "jimmy", "bob", "roger"}
+	names := []string{"jae", "marcus", "isaiah", "jonas", "kelly", "jordan", "jimmy", "bob", "roger", "bill"}
 
 	// first try with empty collection, should create user
 	user := findOrCreateUser(names[0], userColl)
@@ -155,7 +134,7 @@ func TestFindOrCreateUser(test *testing.T) {
 
 	// add all users from the names array, should get size of array as count
 
-	var users = [9]*User{}
+	var users = [10]*User{}
 
 	for i := 0; i < len(names); i++ {
 		users[i] = findOrCreateUser(names[i], userColl)
@@ -166,8 +145,8 @@ func TestFindOrCreateUser(test *testing.T) {
 	if cErr != nil {
 		test.Fatalf("Database error in call to collections.Count(), error should be nil, but was %v", cErr)
 	}
-	if dbSize != 9 {
-		test.Fatalf("Database should have 9 element in it, but has %v", dbSize)
+	if dbSize != 10 {
+		test.Fatalf("Database should have 10 element in it, but has %v", dbSize)
 	}
 
 }
