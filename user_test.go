@@ -90,7 +90,7 @@ func TestFindUser(test *testing.T) {
 func TestFindOrCreateUser(test *testing.T) {
 	dbConf, session := initResetDB()
 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
-	names := []string{"jae", "marcus", "isaiah", "jonas", "kelly"}
+	names := []string{"jae", "marcus", "isaiah", "jonas", "kelly", "jordan", "jimmy", "bob", "roger"}
 
 	// first try with empty collection, should create user
 	user := findOrCreateUser(names[0], userColl)
@@ -151,6 +151,23 @@ func TestFindOrCreateUser(test *testing.T) {
 
 	if (*res3).Name != names[1] {
 		test.Fatalf("user returned was supposed to be "+names[0]+" but was %v", (*res3).Name)
+	}
+
+	// add all users from the names array, should get size of array as count
+
+	var users = [9]*User{}
+
+	for i := 0; i < len(names); i++ {
+		users[i] = findOrCreateUser(names[i], userColl)
+	}
+
+	dbSize, cErr = userColl.Count()
+
+	if cErr != nil {
+		test.Fatalf("Database error in call to collections.Count(), error should be nil, but was %v", cErr)
+	}
+	if dbSize != 9 {
+		test.Fatalf("Database should have 9 element in it, but has %v", dbSize)
 	}
 
 }
