@@ -17,10 +17,13 @@ func main() {
 	session := connectToMongo("mongodb://localhost")
 	defer session.Close()
 	coll := getColl(session, "gobucks", "users")
-	fmt.Println(username)
 	user := findOrCreateUser(username, coll)
+<<<<<<< HEAD
 	fmt.Println(user)
 	repl(user.Name)
+=======
+	repl(user.name)
+>>>>>>> 809017ca7269e4728fb90369395f5a53f9f2921b
 }
 
 func repl(user string) {
@@ -39,10 +42,12 @@ func parse(input string) {
 	case "gamble":
 		if len(arr) < 2 {
 			errorMessage()
+			return
 		}
 		numGamble, err := strconv.Atoi(arr[1])
 		if err != nil {
 			errorMessage()
+			return
 		}
 		fmt.Println(numGamble)
 	default:

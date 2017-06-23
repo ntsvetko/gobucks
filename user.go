@@ -32,11 +32,7 @@ func findUser(name string, userColl *mgo.Collection) (*User, error) {
 func findOrCreateUser(name string, userColl *mgo.Collection) *User {
 	user, err := findUser(name, userColl)
 
-	/*if err != nil {
-		log.Fatal(err)
-	}*/
-
-	if user != nil {
+	if err == nil {
 		return user
 	}
 
