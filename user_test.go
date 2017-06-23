@@ -32,9 +32,11 @@ func initResetDB() (dbConfig, *mgo.Session) {
 func TestCreateUser(test *testing.T) {
 	dbConf, session := initResetDB()
 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
-	userName := "vlad"
+	userName := "Danny"
+	currAmount := 100
+	emptyTransactionHistory := []Transaction{}
 
-	user, err := createUser(userName, 100, userColl)
+	user, err := createUser(userName, currAmount, userColl)
 
 	if err != nil {
 		test.Fatalf("database error in createUser, error should be nil but was: %v", err)
@@ -51,7 +53,7 @@ func TestCreateUser(test *testing.T) {
 	}
 
 	result := User{}
-	resErr := userColl.Find(bson.M{"name": userName}).One(&result)
+	resErr := userColl.Find(bson.M{"name": userName, "curramount": currAmount, "transactionhistory": emptyTransactionHistory}).One(&result)
 
 	if resErr != nil {
 		test.Fatalf("database error in createUser, error should be nil but was: %v", resErr)
@@ -61,3 +63,11 @@ func TestCreateUser(test *testing.T) {
 		test.Fatalf("user returned was expected to be "+userName+" but was %v", result.Name)
 	}
 }
+
+// func TestFindUser(test *testing.T) {
+// 	dbConf, session := initResetDB()
+// 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
+// 	userName := "Avery"
+
+// 	user, err := createUser(username, 100, userColl)
+// }
