@@ -18,6 +18,7 @@ func main() {
 	defer session.Close()
 	coll := getColl(session, "gobucks", "users")
 	user := findOrCreateUser(username, coll)
+	fmt.Println(user)
 	repl(user.Name)
 }
 

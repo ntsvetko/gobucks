@@ -32,9 +32,11 @@ func initResetDB() (dbConfig, *mgo.Session) {
 func TestCreateUser(test *testing.T) {
 	dbConf, session := initResetDB()
 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
-	userName := "vlad"
+	userName := "Danny"
+	currAmount := 100
+	emptyTransactionHistory := []Transaction{}
 
-	user, err := createUser(userName, 100, userColl)
+	user, err := createUser(userName, currAmount, userColl)
 
 	if err != nil {
 		test.Fatalf("database error in createUser, error should be nil but was: %v", err)
@@ -43,7 +45,7 @@ func TestCreateUser(test *testing.T) {
 	fmt.Println("@createUser: user added: " + user.Name)
 
 	if user == nil {
-		test.Fatalf("createUser should return a user, but instead returned %v", err)
+		test.Fatal("createUser should return a user, but instead returned nil", err)
 	}
 
 	if (*user).Name != userName {
@@ -51,7 +53,7 @@ func TestCreateUser(test *testing.T) {
 	}
 
 	result := User{}
-	resErr := userColl.Find(bson.M{"name": userName}).One(&result)
+	resErr := userColl.Find(bson.M{"name": userName, "curramount": currAmount, "transactionhistory": emptyTransactionHistory}).One(&result)
 
 	if resErr != nil {
 		test.Fatalf("database error in createUser, error should be nil but was: %v", resErr)
@@ -60,4 +62,27 @@ func TestCreateUser(test *testing.T) {
 	if result.Name != userName {
 		test.Fatalf("user returned was expected to be "+userName+" but was %v", result.Name)
 	}
+}
+
+func TestFindUser(test *testing.T) {
+	dbConf, session := initResetDB()
+	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
+	userName := "Avery"
+
+	createUser(userName, 100, userColl)
+
+	user, err := findUser(userName, userColl)
+
+	if err != nil {
+		test.Fatalf("Database error in find user, error should be nil but was %v", err)
+	}
+
+	if user == nil {
+		test.Fatal("findUser should return a user, but isntead returned nil", err)
+	}
+
+	if (*user).Name != userName {
+		test.Fatalf("user returned was supposed to be "+userName+" but was %v", (*user).Name)
+	}
+
 }
