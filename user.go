@@ -23,7 +23,7 @@ func createUser(name string, startingBalance int, userColl *mgo.Collection) (*Us
 
 func findUser(name string, userColl *mgo.Collection) (*User, error) {
 	user := User{}
-	err := userColl.Find(bson.M{"Name": name}).One(&user)
+	err := userColl.Find(bson.M{"name": name}).One(&user)
 
 	return &user, err
 }

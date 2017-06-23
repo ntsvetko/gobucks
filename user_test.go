@@ -45,7 +45,7 @@ func TestCreateUser(test *testing.T) {
 	fmt.Println("@createUser: user added: " + user.Name)
 
 	if user == nil {
-		test.Fatalf("createUser should return a user, but instead returned %v", err)
+		test.Fatal("createUser should return a user, but instead returned nil", err)
 	}
 
 	if (*user).Name != userName {
@@ -64,10 +64,25 @@ func TestCreateUser(test *testing.T) {
 	}
 }
 
-// func TestFindUser(test *testing.T) {
-// 	dbConf, session := initResetDB()
-// 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
-// 	userName := "Avery"
+func TestFindUser(test *testing.T) {
+	dbConf, session := initResetDB()
+	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
+	userName := "Avery"
 
-// 	user, err := createUser(username, 100, userColl)
-// }
+	createUser(userName, 100, userColl)
+
+	user, err := findUser(userName, userColl)
+
+	if err != nil {
+		test.Fatalf("Database error in find user, error should be nil but was %v", err)
+	}
+
+	if user == nil {
+		test.Fatal("findUser should return a user, but isntead returned nil", err)
+	}
+
+	if (*user).Name != userName {
+		test.Fatalf("user returned was supposed to be "+userName+" but was %v", (*user).Name)
+	}
+
+}
