@@ -22,7 +22,7 @@ func initResetDB() (dbConfig, *mgo.Session) {
 	return dbConf, session
 }
 
-func seedUsers(dbConf dbConfig, session *mgo.Session) *mgo.Collection {
+func seedUsers(dbConf dbConfig, session *mgo.Session) ([]string, *mgo.Collection) {
 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
 	names := []string{"jae", "marcus", "isaiah", "jonas", "kelly", "jordan", "jimmy", "bob", "roger", "bill"}
 
@@ -32,5 +32,5 @@ func seedUsers(dbConf dbConfig, session *mgo.Session) *mgo.Collection {
 		users[i] = findOrCreateUser(names[i], userColl)
 	}
 
-	return userColl
+	return names, userColl
 }

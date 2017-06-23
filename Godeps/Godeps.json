@@ -1,0 +1,32 @@
+{
+	"ImportPath": "github.com/gobucks",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "gopkg.in/mgo.v2",
+			"Comment": "r2016.08.01-16-g1826d82",
+			"Rev": "1826d82b4485bcededc6841c7bdae2de3a240b9b"
+		},
+		{
+			"ImportPath": "gopkg.in/mgo.v2/bson",
+			"Comment": "r2016.08.01-16-g1826d82",
+			"Rev": "1826d82b4485bcededc6841c7bdae2de3a240b9b"
+		},
+		{
+			"ImportPath": "gopkg.in/mgo.v2/internal/json",
+			"Comment": "r2016.08.01-16-g1826d82",
+			"Rev": "1826d82b4485bcededc6841c7bdae2de3a240b9b"
+		},
+		{
+			"ImportPath": "gopkg.in/mgo.v2/internal/sasl",
+			"Comment": "r2016.08.01-16-g1826d82",
+			"Rev": "1826d82b4485bcededc6841c7bdae2de3a240b9b"
+		},
+		{
+			"ImportPath": "gopkg.in/mgo.v2/internal/scram",
+			"Comment": "r2016.08.01-16-g1826d82",
+			"Rev": "1826d82b4485bcededc6841c7bdae2de3a240b9b"
+		}
+	]
+}

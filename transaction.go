@@ -7,6 +7,7 @@ type Transaction struct {
 	amountAfter   int
 }
 
-func seedUsers() {
+// Doens't check if transaction is legal
+func addTransaction(name string, prevAmt int, betAmt int, outcome bool) {
 
 }
