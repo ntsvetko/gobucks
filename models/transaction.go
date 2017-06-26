@@ -15,12 +15,8 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 	if betAmt < 0 {
 		return false, nil // bad arg
 	}
-	user := User{}
-	err := userColl.Find(bson.M{"name": name}).One(&user)
 
-	if user.Name != name {
-		return false, nil
-	}
+	user := FindOrCreateUser(name, userColl)
 
 	currAmt := user.CurrAmount
 	var newAmt int
@@ -37,7 +33,7 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 
 	trans := Transaction{currAmt, betAmt, outcome, newAmt}
 
-	err = userColl.Update(bson.M{"name": name}, bson.M{"$push": bson.M{"transactionhistory": trans}})
+	err := userColl.Update(bson.M{"name": name}, bson.M{"$push": bson.M{"transactionhistory": trans}})
 
 	if err != nil {
 		return false, err

@@ -189,6 +189,45 @@ func TestAddTransaction(test *testing.T) {
 		test.Fatalf("user.CurrAmount should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", user.CurrAmount)
 	}
 
+	// call AddTransaction with non-existing user (should call FindOrCreate user and return successfully)
+
+	r, _ = AddTransaction("randomNameNotInDBm", 5, false, userColl)
+
+	if r == false {
+		test.Fatal("AddTransaction should create a user and return true for calls with users that don't yet exist")
+	}
+
+	err = userColl.Find(bson.M{"name": "randomNameNotInDBm"}).One(&user)
+	if err != nil {
+		test.Fatalf("database error in TestAddTransaction, err should be nil but was %v", err)
+	}
+
+	if len(user.TransactionHistory) != 1 {
+		test.Fatalf("length of transactionhistory should be 1 but was %v", err)
+	}
+
+	trans = user.TransactionHistory[0]
+
+	if trans.AmountBefore != 100 {
+		test.Fatalf("trans.amountBefore should be "+strconv.Itoa(100)+" but was %v", trans.AmountBefore)
+	}
+
+	if trans.AmountGambled != 5 {
+		test.Fatalf("trans.amountGambled should be "+strconv.Itoa(5)+" but was %v", trans.AmountGambled)
+	}
+
+	if trans.Result != false {
+		test.Fatalf("trans.result should be "+strconv.FormatBool(false)+" but was %v", trans.Result)
+	}
+
+	if trans.AmountAfter != 95 {
+		test.Fatalf("trans.amuntAfter should be "+strconv.Itoa(95)+" but was %v", trans.AmountAfter)
+	}
+
+	if user.CurrAmount != 95 {
+		test.Fatalf("user.CurrAmount should be "+strconv.Itoa(95)+" but was %v", user.CurrAmount)
+	}
+
 	// invalid calls to AddTransaction
 
 	err = userColl.Find(bson.M{"name": names[2]}).One(&user)
@@ -205,9 +244,4 @@ func TestAddTransaction(test *testing.T) {
 		test.Fatal("AddTransaction should return false for invalid transactions")
 	}
 
-	r, _ = AddTransaction("randomNameNotInDBm", 5, outcome, userColl)
-
-	if r == true {
-		test.Fatal("AddTransaction should return false for calls with users that don't exist")
-	}
 }
