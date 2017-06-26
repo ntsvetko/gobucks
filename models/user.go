@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"log"
@@ -29,7 +29,7 @@ func findUser(name string, userColl *mgo.Collection) (*User, error) {
 }
 
 // if user exists, returns that user, otherwise creates and returns new user
-func findOrCreateUser(name string, userColl *mgo.Collection) *User {
+func FindOrCreateUser(name string, userColl *mgo.Collection) *User {
 	user, err := findUser(name, userColl)
 
 	if err == nil {

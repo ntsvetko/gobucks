@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"testing"
@@ -41,6 +41,7 @@ func TestCreateUser(test *testing.T) {
 	if result.Name != userName {
 		test.Fatalf("user returned was expected to be "+userName+" but was %v", result.Name)
 	}
+
 }
 
 func TestFindUser(test *testing.T) {
@@ -72,7 +73,7 @@ func TestFindOrCreateUser(test *testing.T) {
 	names := []string{"jae", "marcus", "isaiah", "jonas", "kelly", "jordan", "jimmy", "bob", "roger", "bill"}
 
 	// first try with empty collection, should create user
-	user := findOrCreateUser(names[0], userColl)
+	user := FindOrCreateUser(names[0], userColl)
 
 	if user == nil {
 		test.Fatal("findOrCreateUser should return a user, but instead returned nil", user)
@@ -94,7 +95,7 @@ func TestFindOrCreateUser(test *testing.T) {
 
 	// calling the method with the same user should return the user without creating a new one
 
-	user = findOrCreateUser(names[0], userColl)
+	user = FindOrCreateUser(names[0], userColl)
 
 	dbSize, cErr := userColl.Count()
 
@@ -112,7 +113,7 @@ func TestFindOrCreateUser(test *testing.T) {
 
 	// calling this method now with a different user should result in 2 users in the collections
 
-	user = findOrCreateUser(names[1], userColl)
+	user = FindOrCreateUser(names[1], userColl)
 
 	if user == nil {
 		test.Fatal("findOrCreateUser should return a user, but instead returned nil", user)
@@ -137,7 +138,7 @@ func TestFindOrCreateUser(test *testing.T) {
 	var users = [10]*User{}
 
 	for i := 0; i < len(names); i++ {
-		users[i] = findOrCreateUser(names[i], userColl)
+		users[i] = FindOrCreateUser(names[i], userColl)
 	}
 
 	dbSize, cErr = userColl.Count()

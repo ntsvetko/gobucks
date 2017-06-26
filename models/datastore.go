@@ -1,4 +1,4 @@
-package main
+package models
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-// method that calls this needs to close session when done
-func connectToMongo(uri string) *mgo.Session {
+// methods that call ConnectToMongo needs to close session when done
+func ConnectToMongo(uri string) *mgo.Session {
 	session, err := mgo.Dial(uri)
 
 	if err != nil {
@@ -19,7 +19,7 @@ func connectToMongo(uri string) *mgo.Session {
 	return session
 }
 
-func getColl(session *mgo.Session, dbName string, collName string) *mgo.Collection {
+func GetColl(session *mgo.Session, dbName string, collName string) *mgo.Collection {
 	coll := session.DB(dbName).C(collName)
 	return coll
 }
