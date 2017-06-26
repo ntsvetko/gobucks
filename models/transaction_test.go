@@ -21,18 +21,23 @@ func TestAddTransaction(test *testing.T) {
 		test.Fatalf("Database should have 10 element in it, but has %v", dbSize)
 	}
 
-	// add transaction to user with empty history
+	// add winning transaction to user with empty history
 
 	user := User{}
 	err := userColl.Find(bson.M{"name": names[0]}).One(&user)
 	if err != nil {
 		test.Fatalf("database error in TestAddTransaction, err should be nil but was %v", err)
 	}
-	beforeAmt, betAmt := user.CurrAmount, 15
+	beforeAmt, betAmt := 100, 15
 	outcome := true
 
-	addTransaction(user.Name, beforeAmt, betAmt, outcome)
+	r, _ := AddTransaction(user.Name, betAmt, outcome, userColl)
 
+	if r != true {
+		test.Fatalf("AddTransaction should return true for successful operations")
+	}
+
+	//get updated user
 	err = userColl.Find(bson.M{"name": names[0]}).One(&user)
 	if err != nil {
 		test.Fatalf("database error in TestAddTransaction, err should be nil but was %v", err)
@@ -44,20 +49,165 @@ func TestAddTransaction(test *testing.T) {
 
 	trans := user.TransactionHistory[0]
 
-	if trans.amountBefore != beforeAmt {
-		test.Fatalf("trans.amountBefore should be "+strconv.Itoa(beforeAmt)+" but was %v", trans.amountBefore)
+	if trans.AmountBefore != beforeAmt {
+		test.Fatalf("trans.amountBefore should be "+strconv.Itoa(beforeAmt)+" but was %v", trans.AmountBefore)
 	}
 
-	if trans.amountGambled != betAmt {
-		test.Fatalf("trans.amountGambled should be "+strconv.Itoa(betAmt)+" but was %v", trans.amountGambled)
+	if trans.AmountGambled != betAmt {
+		test.Fatalf("trans.amountGambled should be "+strconv.Itoa(betAmt)+" but was %v", trans.AmountGambled)
 	}
 
-	if trans.result != outcome {
-		test.Fatalf("trans.result should be "+strconv.FormatBool(outcome)+" but was %v", trans.result)
+	if trans.Result != outcome {
+		test.Fatalf("trans.result should be "+strconv.FormatBool(outcome)+" but was %v", trans.Result)
 	}
 
-	if trans.amountAfter != (beforeAmt + betAmt) {
-		test.Fatalf("trans.amuntAfter should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", trans.amountAfter)
+	if trans.AmountAfter != (beforeAmt + betAmt) {
+		test.Fatalf("trans.amuntAfter should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", trans.AmountAfter)
 	}
 
+	if user.CurrAmount != (beforeAmt + betAmt) {
+		test.Fatalf("user.CurrAmount should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", user.CurrAmount)
+	}
+
+	// add winning transaction to non-empty history
+
+	beforeAmt, betAmt = 115, 30
+	outcome = true
+
+	AddTransaction(user.Name, betAmt, outcome, userColl)
+
+	err = userColl.Find(bson.M{"name": names[0]}).One(&user)
+	if err != nil {
+		test.Fatalf("database error in TestAddTransaction, err should be nil but was %v", err)
+	}
+
+	if len(user.TransactionHistory) != 2 {
+		test.Fatalf("length of transactionhistory should be 1 but was %v", err)
+	}
+
+	trans = user.TransactionHistory[1]
+
+	if trans.AmountBefore != beforeAmt {
+		test.Fatalf("trans.amountBefore should be "+strconv.Itoa(beforeAmt)+" but was %v", trans.AmountBefore)
+	}
+
+	if trans.AmountGambled != betAmt {
+		test.Fatalf("trans.amountGambled should be "+strconv.Itoa(betAmt)+" but was %v", trans.AmountGambled)
+	}
+
+	if trans.Result != outcome {
+		test.Fatalf("trans.result should be "+strconv.FormatBool(outcome)+" but was %v", trans.Result)
+	}
+
+	if trans.AmountAfter != (beforeAmt + betAmt) {
+		test.Fatalf("trans.amuntAfter should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", trans.AmountAfter)
+	}
+
+	if user.CurrAmount != (beforeAmt + betAmt) {
+		test.Fatalf("user.CurrAmount should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", user.CurrAmount)
+	}
+
+	// add losing transaction to non-empty history
+
+	beforeAmt, betAmt = 145, 35
+	outcome = false
+
+	AddTransaction(user.Name, betAmt, outcome, userColl)
+
+	err = userColl.Find(bson.M{"name": names[0]}).One(&user)
+	if err != nil {
+		test.Fatalf("database error in TestAddTransaction, err should be nil but was %v", err)
+	}
+
+	if len(user.TransactionHistory) != 3 {
+		test.Fatalf("length of transactionhistory should be 1 but was %v", err)
+	}
+
+	trans = user.TransactionHistory[2]
+
+	if trans.AmountBefore != beforeAmt {
+		test.Fatalf("trans.amountBefore should be "+strconv.Itoa(beforeAmt)+" but was %v", trans.AmountBefore)
+	}
+
+	if trans.AmountGambled != betAmt {
+		test.Fatalf("trans.amountGambled should be "+strconv.Itoa(betAmt)+" but was %v", trans.AmountGambled)
+	}
+
+	if trans.Result != outcome {
+		test.Fatalf("trans.result should be "+strconv.FormatBool(outcome)+" but was %v", trans.Result)
+	}
+
+	if trans.AmountAfter != (beforeAmt - betAmt) {
+		test.Fatalf("trans.amuntAfter should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", trans.AmountAfter)
+	}
+
+	if user.CurrAmount != (beforeAmt - betAmt) {
+		test.Fatalf("user.CurrAmount should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", user.CurrAmount)
+	}
+
+	// add losing transaction to empty history
+
+	beforeAmt, betAmt = 100, 35
+	outcome = false
+
+	//change user to one with empty transactionhistory
+	err = userColl.Find(bson.M{"name": names[1]}).One(&user)
+	if err != nil {
+		test.Fatalf("database error in TestAddTransaction, err should be nil but was %v", err)
+	}
+
+	AddTransaction(user.Name, betAmt, outcome, userColl)
+
+	err = userColl.Find(bson.M{"name": names[1]}).One(&user)
+	if err != nil {
+		test.Fatalf("database error in TestAddTransaction, err should be nil but was %v", err)
+	}
+
+	if len(user.TransactionHistory) != 1 {
+		test.Fatalf("length of transactionhistory should be 1 but was %v", err)
+	}
+
+	trans = user.TransactionHistory[0]
+
+	if trans.AmountBefore != beforeAmt {
+		test.Fatalf("trans.amountBefore should be "+strconv.Itoa(beforeAmt)+" but was %v", trans.AmountBefore)
+	}
+
+	if trans.AmountGambled != betAmt {
+		test.Fatalf("trans.amountGambled should be "+strconv.Itoa(betAmt)+" but was %v", trans.AmountGambled)
+	}
+
+	if trans.Result != outcome {
+		test.Fatalf("trans.result should be "+strconv.FormatBool(outcome)+" but was %v", trans.Result)
+	}
+
+	if trans.AmountAfter != (beforeAmt - betAmt) {
+		test.Fatalf("trans.amuntAfter should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", trans.AmountAfter)
+	}
+
+	if user.CurrAmount != (beforeAmt - betAmt) {
+		test.Fatalf("user.CurrAmount should be "+strconv.Itoa(beforeAmt+betAmt)+" but was %v", user.CurrAmount)
+	}
+
+	// invalid calls to AddTransaction
+
+	err = userColl.Find(bson.M{"name": names[2]}).One(&user)
+	if err != nil {
+		test.Fatalf("database error in TestAddTransaction, err should be nil but was %v", err)
+	}
+
+	beforeAmt, betAmt = user.CurrAmount, (user.CurrAmount + 10)
+	outcome = false
+
+	r, _ = AddTransaction(user.Name, betAmt, outcome, userColl)
+
+	if r == true {
+		test.Fatal("AddTransaction should return false for invalid transactions")
+	}
+
+	r, _ = AddTransaction("randomNameNotInDBm", 5, outcome, userColl)
+
+	if r == true {
+		test.Fatal("AddTransaction should return false for calls with users that don't exist")
+	}
 }
