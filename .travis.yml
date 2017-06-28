@@ -1,0 +1,14 @@
+language: go
+
+go:
+  - 1.7
+
+before_install:
+  - go get github.com/ntsvetko/gobucks
+  - go get github.com/tools/godep
+
+install:
+  - godep restore
+
+script:
+  - go test -v ./...
