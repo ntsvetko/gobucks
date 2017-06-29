@@ -4,6 +4,7 @@ go:
   - 1.7
 
 install:
+  - git clone https://github.com/ntsvetko/gobucks.git
   - go get -u github.com/tools/godep
   - godep restore
 
