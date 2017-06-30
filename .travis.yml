@@ -8,8 +8,9 @@ script:
   - tar zxf mongodb.tgz
   - mv mongodb-* mongodb
   - chmod +x mongodb/bin
-  - mkdir -p /data/db
+  - mkdir -p data/db
   - export MONGODB_HOME=mongodb
   - export PATH=$MONGODB_HOME/bin:$PATH
-  - numactl --interleave=all mongod
+  - mongod -dbpath data/db &
+  - go build
   - go test -v ./...
