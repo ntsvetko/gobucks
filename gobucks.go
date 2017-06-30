@@ -50,15 +50,15 @@ func parse(input string) {
 			return
 		}
 		user := arr[2]
-		win, err := Gamble(user, numGamble, coll)
+		win, newAmt, err := Gamble(user, numGamble, coll)
 		if err != nil {
 			fmt.Println("something went wrong when gambling")
 			return
 		}
 		if win {
-			fmt.Println(user + " has won " + strconv.Itoa(numGamble) + "!")
+			fmt.Println(user + " has won " + strconv.Itoa(numGamble) + " and now has " + strconv.Itoa(newAmt) + "!")
 		} else {
-			fmt.Println(user + " has lost " + strconv.Itoa(numGamble) + "!")
+			fmt.Println(user + " has lost " + strconv.Itoa(numGamble) + " and now has " + strconv.Itoa(newAmt) + "!")
 		}
 	default:
 		errorMessage()
