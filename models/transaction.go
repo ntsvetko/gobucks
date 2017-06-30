@@ -27,7 +27,7 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 		newAmt = (currAmt - betAmt)
 	}
 
-	if newAmt < 0 {
+	if newAmt < 0 || betAmt > currAmt {
 		return false, currAmt, nil // invalid args
 	}
 
