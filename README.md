@@ -15,6 +15,8 @@ Natalie and Vlad learn Go, inspired by everyone's favorite slackbot, mongobucks 
 
 This gives you a REPL where you can gamble to your heart's content! Unfortunately, none of the gambles in this program actually mean something, but use your imagination.
 
+Give it commands of `gamble <number>` or `balance`.
+
 The output of `./gobucks natalie` looks something like this:
 
 ```

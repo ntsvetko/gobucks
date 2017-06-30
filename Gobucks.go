@@ -24,6 +24,8 @@ var rwm sync.RWMutex
 // fun mongo things
 var session *mgo.Session
 
+var username string // to make things a bit easier in repl mode
+
 const databaseString = "gobucks"
 const collectionString = "users"
 
@@ -70,9 +72,9 @@ func repl(user string) {
 		userDone[user] = make(chan bool, 10)
 		userDone[user] <- true
 	}
+	username = user
 	scanner := bufio.NewScanner(os.Stdin)
-	balance := Balance(user, session, databaseString, collectionString)
-	fmt.Println(user + "'s balance: " + strconv.Itoa(balance))
+	printBalance(user)
 	fmt.Print(user + "> ")
 	for scanner.Scan() {
 		input := scanner.Text()
@@ -84,7 +86,7 @@ func repl(user string) {
 }
 
 /*
-* parses something of the format "<user> gamble <number>"
+* parses something of the format "gamble <user> <number>"
  */
 func parse(input string) {
 	arr := strings.Split(input, " ")
@@ -108,6 +110,9 @@ func parse(input string) {
 		}
 		rwm.Unlock()
 		concurrentGamble(user, numGamble)
+	case "balance":
+		printBalance(username)
+		defer wg.Done()
 	default:
 		errorMessage()
 	}
@@ -147,4 +152,9 @@ func errorMessage() {
 		fmt.Println("ERROR: please input something of form 'gamble <num>'")
 	}
 	wg.Done()
+}
+
+func printBalance(user string) {
+	balance := Balance(user, session, databaseString, collectionString)
+	fmt.Println(user + "'s balance: " + strconv.Itoa(balance))
 }
