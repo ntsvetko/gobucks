@@ -1,0 +1,8 @@
+gamble 10 nat
+gamble 20 vlad
+gamble 30 nat
+gamble 10 justin
+gamble 12 vlad
+gamble 10 nat
+gamble 10 nat
+gamble 10 nat
