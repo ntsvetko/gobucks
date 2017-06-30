@@ -32,6 +32,7 @@ func Gamble(name string, bet int, session *mgo.Session, dbName string, collName 
 
 	sessionCopy := session.Copy()
 	defer sessionCopy.Close()
+
 	userColl := sessionCopy.DB(dbName).C(collName)
 	transaction, currAmt, err := models.AddTransaction(name, bet, outcome, userColl)
 	if err != nil {
@@ -43,4 +44,17 @@ func Gamble(name string, bet int, session *mgo.Session, dbName string, collName 
 	}
 
 	return true, currAmt, nil
+}
+
+/*Balance returns the current balance of the specified user
+ */
+func Balance(name string, session *mgo.Session, dbName string, collName string) int {
+	sessionCopy := session.Copy()
+	defer sessionCopy.Close()
+
+	userColl := sessionCopy.DB(dbName).C(collName)
+
+	user := models.FindOrCreateUser(name, userColl)
+
+	return user.CurrAmount
 }
