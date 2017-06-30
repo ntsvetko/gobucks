@@ -27,19 +27,19 @@ func TestGamble(test *testing.T) {
 	dbConf, session := models.InitResetDB()
 	names, userColl := models.SeedUsers(dbConf, "gambletestcollection", session)
 
-	_, currBalance, _ := Gamble(names[0], 1000, userColl)
+	_, currBalance, _ := Gamble(names[0], 1000, session, "test", "gambletestcollection")
 
 	if currBalance != 100 {
 		test.Fatalf("@Gamble")
 	}
 
-	_, currBalance, _ = Gamble(names[0], -1, userColl)
+	_, currBalance, _ = Gamble(names[0], -1, session, "test", "gambletestcollection")
 
 	if currBalance != 100 {
 		test.Fatalf("@Gamble")
 	}
 
-	outcome, currBalance, _ := Gamble(names[0], 85, userColl)
+	outcome, currBalance, _ := Gamble(names[0], 85, session, "test", "gambletestcollection")
 
 	if currBalance != 15 && currBalance != 185 {
 		test.Fatalf("@Gamble")
@@ -57,5 +57,5 @@ func TestGamble(test *testing.T) {
 		}
 	}
 
-	Gamble(names[0], 10, userColl)
+	Gamble(names[0], 10, session, "test", "gambletestcollection")
 }

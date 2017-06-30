@@ -20,8 +20,12 @@ func trueOrFalse() bool {
 }
 
 // returns true for win, false for loss, error for failed operation
-func Gamble(name string, bet int, userColl *mgo.Collection) (bool, int, error) {
+func Gamble(name string, bet int, session *mgo.Session, dbName string, collName string) (bool, int, error) {
 	outcome := trueOrFalse()
+
+	sessionCopy := session.Copy()
+	defer sessionCopy.Close()
+	userColl := sessionCopy.DB(dbName).C(collName)
 	transaction, currAmt, err := models.AddTransaction(name, bet, outcome, userColl)
 	if err != nil {
 		return false, currAmt, err
