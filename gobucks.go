@@ -3,10 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/ntsvetko/gobucks/models"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/ntsvetko/gobucks/models"
+	"gopkg.in/mgo.v2"
 )
 
 var coll *mgo.Collection
@@ -49,7 +51,7 @@ func parse(input string) {
 			return
 		}
 		user := arr[2]
-		err = Gamble(user, numGamble, coll)
+		_, _, err = Gamble(user, numGamble, coll)
 		if err != nil {
 			fmt.Println("something went wrong when gambling")
 			return
