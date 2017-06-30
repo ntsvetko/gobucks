@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/ntsvetko/gobucks/models"
-	"gopkg.in/mgo.v2"
 	"math/rand"
 	"time"
+
+	"github.com/ntsvetko/gobucks/models"
+	"gopkg.in/mgo.v2"
 )
 
 func trueOrFalse() bool {
@@ -18,17 +19,17 @@ func trueOrFalse() bool {
 	return false
 }
 
-// returns true for success, false for failure
-func Gamble(name string, bet int, userColl *mgo.Collection) bool {
+// returns true for win, false for loss, error for failed operation
+func Gamble(name string, bet int, userColl *mgo.Collection) (bool, error) {
 	outcome := trueOrFalse()
-	transactionSuccess, err := models.AddTransaction(name, bet, outcome, userColl)
+	transaction, err := models.AddTransaction(name, bet, outcome, userColl)
 	if err != nil {
-		return false
+		return false, err
 	}
 
-	if transactionSuccess == false {
-		return false
+	if transaction == false {
+		return false, nil
 	}
 
-	return true
+	return true, nil
 }

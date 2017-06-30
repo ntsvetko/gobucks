@@ -10,7 +10,7 @@ type Transaction struct {
 	AmountAfter   int
 }
 
-// returns true for successful additions to the history, false otherwise
+// returns true for wins, false for loss, error for failed transactions
 func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collection) (bool, error) {
 	if betAmt < 0 {
 		return false, nil // bad arg
@@ -45,5 +45,5 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 		return false, err
 	}
 
-	return true, nil
+	return outcome, nil
 }
