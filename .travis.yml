@@ -11,5 +11,5 @@ script:
   - mkdir -p data/db
   - export MONGODB_HOME=mongodb
   - export PATH=$MONGODB_HOME/bin:$PATH
-  - mongod -dbpath data/db
+  - mongod -dbpath data/db &
   - go test -v ./...
