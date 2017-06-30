@@ -1,12 +1,10 @@
 package main
 
 import (
+	"github.com/ntsvetko/gobucks/models"
+	"gopkg.in/mgo.v2"
 	"math/rand"
 	"time"
-
-	"github.com/gobucks/models"
-
-	"gopkg.in/mgo.v2"
 )
 
 func trueOrFalse() bool {

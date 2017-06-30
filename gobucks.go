@@ -3,12 +3,13 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/ntsvetko/gobucks/models"
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/gobucks/models"
 )
+
+var coll *mgo.Collection
 
 func main() {
 	if len(os.Args) != 2 {
@@ -17,8 +18,8 @@ func main() {
 	}
 	username := os.Args[1]
 	session := models.ConnectToMongo("mongodb://localhost")
+	coll = models.GetColl(session, "gobucks", "users")
 	defer session.Close()
-	coll := models.GetColl(session, "gobucks", "users")
 	user := models.FindOrCreateUser(username, coll)
 	fmt.Println(user)
 	repl(user.Name)
@@ -29,7 +30,7 @@ func repl(user string) {
 	fmt.Print(user + "> ")
 	for scanner.Scan() {
 		input := scanner.Text()
-		parse(input)
+		parse(input + " " + user)
 		fmt.Print(user + "> ")
 	}
 }
@@ -38,16 +39,21 @@ func parse(input string) {
 	arr := strings.Split(input, " ")
 	switch arr[0] {
 	case "gamble":
-		if len(arr) < 2 {
+		if len(arr) < 3 {
 			errorMessage()
-			break
+			return
 		}
 		numGamble, err := strconv.Atoi(arr[1])
 		if err != nil {
 			errorMessage()
-			break
+			return
 		}
-		fmt.Println(numGamble)
+		user := arr[2]
+		err = Gamble(user, numGamble, coll)
+		if err != nil {
+			fmt.Println("something went wrong when gambling")
+			return
+		}
 	default:
 		errorMessage()
 	}

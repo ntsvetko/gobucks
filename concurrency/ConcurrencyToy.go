@@ -1,4 +1,4 @@
-package main
+package notmain
 
 import (
 	"fmt"
@@ -11,7 +11,6 @@ import (
 var userMap map[string]int
 var userDone map[string](chan bool)
 
-//var done chan bool
 var wg sync.WaitGroup
 
 func main() {
