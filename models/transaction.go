@@ -2,9 +2,9 @@ package models
 
 import (
 	"errors"
-
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"strconv"
 )
 
 type Transaction struct {
@@ -28,7 +28,7 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 	currAmt := user.CurrAmount
 	var newAmt int
 	if betAmt < 0 || betAmt > currAmt {
-		return false, currAmt, errors.New("bad args") // bad arg
+		return false, currAmt, errors.New(name + " cannot bet " + strconv.Itoa(betAmt) + ". Balance is " + strconv.Itoa(currAmt) + ".") // bad arg
 	}
 
 	if outcome == true {

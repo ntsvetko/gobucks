@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/ntsvetko/gobucks/models"
 	"gopkg.in/mgo.v2"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -117,10 +118,15 @@ func parse(input string) {
 func concurrentGamble(user string, amount int) {
 	select {
 	case <-userDone[user]:
+		defer func() {
+			userDone[user] <- true
+		}()
+		defer wg.Done()
 		time.Sleep(time.Second * 1) // wait a second because you can't have instant gratification...
 		win, newAmt, err := Gamble(user, amount, session, databaseString, collectionString)
 		if err != nil {
-			fmt.Println("ERROR: Something went wrong when gambling.")
+			fmt.Print("ERROR: Something went wrong when gambling: ")
+			log.Println(err)
 			return
 		}
 		if win {
@@ -128,9 +134,7 @@ func concurrentGamble(user string, amount int) {
 		} else {
 			fmt.Println(user + " has lost " + strconv.Itoa(amount) + " and now has " + strconv.Itoa(newAmt) + "! :(")
 		}
-		userDone[user] <- true
 	}
-	defer wg.Done()
 }
 
 /* tells users when they input nonsense */
