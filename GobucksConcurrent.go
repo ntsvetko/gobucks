@@ -15,7 +15,10 @@ import (
 var userDone map[string](chan bool)
 
 var wg sync.WaitGroup
-var coll *mgo.Collection
+var session *mgo.Session
+
+const databaseString = "gobucks"
+const collectionString = "users"
 
 func main() {
 	if len(os.Args) != 2 {
@@ -30,8 +33,7 @@ func main() {
 	}
 	defer file.Close()
 
-	session := models.ConnectToMongo("mongodb://localhost")
-	coll = models.GetColl(session, "gobucks", "users")
+	session = models.ConnectToMongo("mongodb://localhost")
 	defer session.Close()
 	scanner := bufio.NewScanner(file)
 	userDone = make(map[string](chan bool))
@@ -80,7 +82,7 @@ func concurrentGamble(user string, amount int) {
 	select {
 	case <-userDone[user]:
 		time.Sleep(time.Second * 5) // wait 5 seconds because you can't have instant gratification...
-		win, newAmt, err := Gamble(user, amount, coll)
+		win, newAmt, err := Gamble(user, amount, session, databaseString, collectionString)
 		if err != nil {
 			fmt.Println("something went wrong when gambling")
 			return
