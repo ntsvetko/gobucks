@@ -8,6 +8,6 @@ script:
   - tar zxf mongodb.tgz
   - mv mongodb-* mongodb
   - chmod +x mongodb/bin
-  - mkdir -p data/db
-  - mongod
+  - mkdir -p /data/db
+  - numactl --interleave=all mongod
   - go test -v ./...

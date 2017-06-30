@@ -25,7 +25,7 @@ func TestTrueOrFalse(test *testing.T) {
 
 func TestGamble(test *testing.T) {
 	dbConf, session := models.InitResetDB()
-	names, userColl := models.SeedUsers(dbConf, "gambletestcollection", session)
+	names, _ := models.SeedUsers(dbConf, "gambletestcollection", session)
 
 	_, currBalance, _ := Gamble(names[0], 1000, session, "test", "gambletestcollection")
 
@@ -58,4 +58,17 @@ func TestGamble(test *testing.T) {
 	}
 
 	Gamble(names[0], 10, session, "test", "gambletestcollection")
+}
+
+func TestBalance(test *testing.T) {
+	dbConf, session := models.InitResetDB()
+	names, userColl := models.SeedUsers(dbConf, "balancetestcollection", session)
+
+	models.AddTransaction(names[0], 10, false, userColl) // first user should now have 90
+
+	currBalance := Balance(names[0], session, "test", "balancetestcollection")
+
+	if currBalance != 90 {
+		test.Fatalf("currBalance should be 90 but was %v", currBalance)
+	}
 }
