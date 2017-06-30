@@ -8,6 +8,9 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
+/*
+* psuedo-random gambling method
+ */
 func trueOrFalse() bool {
 	seed := rand.NewSource(time.Now().UnixNano())
 	seededRand := rand.New(seed)
@@ -19,7 +22,11 @@ func trueOrFalse() bool {
 	return false
 }
 
-// returns true for win, false for loss, error for failed operation
+/*Gamble takes a user name, bet amount, mongo session, database name and collection name
+* If the user does not exist, one will be created with a starting fund of 100
+*
+* returns true for win, false for loss, current user balance and an error for failed operation
+ */
 func Gamble(name string, bet int, session *mgo.Session, dbName string, collName string) (bool, int, error) {
 	outcome := trueOrFalse()
 
