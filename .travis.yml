@@ -4,4 +4,10 @@ go:
   - 1.7
 
 script:
-  - go test -v ./models
+  - curl -L https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${mongodb_version}.tgz -o mongodb.tgz
+  - tar zxf mongodb.tgz
+  - mv mongodb-* mongodb
+  - chmod +x mongodb/bin
+  - mkdir -p data/db
+  - mongod
+  - go test -v ./...
