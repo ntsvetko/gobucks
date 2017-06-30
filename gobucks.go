@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/ntsvetko/gobucks/models"
+	"gopkg.in/mgo.v2"
 	"os"
 	"strconv"
 	"strings"
@@ -49,10 +50,15 @@ func parse(input string) {
 			return
 		}
 		user := arr[2]
-		err = Gamble(user, numGamble, coll)
+		win, err := Gamble(user, numGamble, coll)
 		if err != nil {
 			fmt.Println("something went wrong when gambling")
 			return
+		}
+		if win {
+			fmt.Println(user + " has won " + strconv.Itoa(numGamble) + "!")
+		} else {
+			fmt.Println(user + " has lost " + strconv.Itoa(numGamble) + "!")
 		}
 	default:
 		errorMessage()
