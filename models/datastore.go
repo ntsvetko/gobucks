@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-
 	"gopkg.in/mgo.v2"
 )
 

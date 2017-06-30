@@ -40,12 +40,12 @@ func parse(input string) {
 	case "gamble":
 		if len(arr) < 2 {
 			errorMessage()
-			return
+			break
 		}
 		numGamble, err := strconv.Atoi(arr[1])
 		if err != nil {
 			errorMessage()
-			return
+			break
 		}
 		fmt.Println(numGamble)
 	default:
