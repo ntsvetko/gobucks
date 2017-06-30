@@ -12,4 +12,5 @@ script:
   - export MONGODB_HOME=mongodb
   - export PATH=$MONGODB_HOME/bin:$PATH
   - mongod -dbpath data/db &
+  - go build
   - go test -v ./...
