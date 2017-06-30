@@ -73,7 +73,7 @@ nat has won 10 and now has 110!
 nat has won 10 and now has 120!
 ```
 
-There's a slight delay (because gratification can't be *too* instant), and if you run it in this mode, you can see the commands being read in, spawning goroutines, which all complete at different times, waiting for the previous gamble of the same user to finish before moving on to the next one.
+There's a slight delay (because gratification can't be *too* instant), and if you run it in this mode, you can see the commands being read in, spawning goroutines (which all complete at different times), and waiting for the previous gamble of the same user to finish before moving on to the next one.
 
 ## Uses
 This literally has no uses but have fun :D.
