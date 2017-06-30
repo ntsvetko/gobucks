@@ -9,5 +9,5 @@ script:
   - mv mongodb-* mongodb
   - chmod +x mongodb/bin
   - mkdir -p /data/db
-  - mongod
+  - numactl --interleave=all mongod
   - go test -v ./...
