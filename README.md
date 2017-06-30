@@ -1,5 +1,5 @@
 # gobucks
-Natalie and Vlad learn Go.
+Natalie and Vlad learn Go, inspired by everyone's favorite slackbot, mongobucks :).
 
 ## How To Use
 * make sure that you have an instance of mongo running
@@ -7,7 +7,7 @@ Natalie and Vlad learn Go.
   * run `go get github.com/tools/godep`
   * run `godep restore`
 * `go build`
-* choose which way you'd like to run it!
+* choose which way you'd like to run it! (REPL Mode or File Mode)
 
 ### REPL Mode
 
@@ -16,6 +16,7 @@ Natalie and Vlad learn Go.
 This gives you a REPL where you can gamble to your heart's content! Unfortunately, none of the gambles in this program actually mean something, but use your imagination.
 
 The output of `./gobucks natalie` looks something like this:
+
 ```
 Connected to mongo
 natalie's balance: 100
@@ -55,22 +56,22 @@ Output will look something like:
 
 ```
 Connected to mongo
-command: gamble 10 nat
-command: gamble 20 vlad
-command: gamble 30 nat
-command: gamble 10 justin
-command: gamble 12 vlad
-command: gamble 10 nat
-command: gamble 10 nat
-command: gamble 10 nat
-justin has won 10 and now has 120!
-nat has lost 30 and now has 80! :(
-vlad has won 20 and now has 168!
-vlad has won 12 and now has 180!
-nat has won 10 and now has 90!
-nat has won 10 and now has 100!
-nat has won 10 and now has 110!
-nat has won 10 and now has 120!
+read command: gamble 10 nat
+read command: gamble 20 vlad
+read command: gamble 30 nat
+read command: gamble 10 justin
+read command: gamble 12 vlad
+read command: gamble 10 nat
+read command: gamble 10 nat
+read command: gamble 10 nat
+nat has lost 10 and now has 90! :(
+justin has lost 10 and now has 90! :(
+vlad has lost 20 and now has 80! :(
+vlad has lost 12 and now has 68! :(
+nat has won 30 and now has 120! :D
+nat has won 10 and now has 130! :D
+nat has lost 10 and now has 120! :(
+nat has lost 10 and now has 110! :(
 ```
 
 There's a slight delay (because gratification can't be *too* instant), and if you run it in this mode, you can see the commands being read in, spawning goroutines (which all complete at different times), and waiting for the previous gamble of the same user to finish before moving on to the next one.
