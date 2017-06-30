@@ -14,7 +14,7 @@ func getDbConfig() dbConfig {
 	return dbConf
 }
 
-func initResetDB() (dbConfig, *mgo.Session) {
+func InitResetDB() (dbConfig, *mgo.Session) {
 	dbConf := getDbConfig()
 	session := ConnectToMongo(dbConf.uri)
 
@@ -22,8 +22,8 @@ func initResetDB() (dbConfig, *mgo.Session) {
 	return dbConf, session
 }
 
-func seedUsers(dbConf dbConfig, session *mgo.Session) ([]string, *mgo.Collection) {
-	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
+func SeedUsers(dbConf dbConfig, collName string, session *mgo.Session) ([]string, *mgo.Collection) {
+	userColl := session.DB(dbConf.dbName).C(collName)
 	names := []string{"jae", "marcus", "isaiah", "jonas", "kelly", "jordan", "jimmy", "bob", "roger", "bill"}
 
 	var users = [10]*User{}

@@ -9,7 +9,7 @@ import (
 )
 
 func TestCreateUser(test *testing.T) {
-	dbConf, session := initResetDB()
+	dbConf, session := InitResetDB()
 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
 	userName := "Danny"
 	currAmount := 100
@@ -45,7 +45,7 @@ func TestCreateUser(test *testing.T) {
 }
 
 func TestFindUser(test *testing.T) {
-	dbConf, session := initResetDB()
+	dbConf, session := InitResetDB()
 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
 	userName := "Avery"
 
@@ -68,7 +68,7 @@ func TestFindUser(test *testing.T) {
 }
 
 func TestFindOrCreateUser(test *testing.T) {
-	dbConf, session := initResetDB()
+	dbConf, session := InitResetDB()
 	userColl := session.DB(dbConf.dbName).C(dbConf.collName)
 	names := []string{"jae", "marcus", "isaiah", "jonas", "kelly", "jordan", "jimmy", "bob", "roger", "bill"}
 

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"testing"
+
+	"github.com/ntsvetko/gobucks/models"
 )
 
 func TestTrueOrFalse(test *testing.T) {
@@ -19,4 +21,41 @@ func TestTrueOrFalse(test *testing.T) {
 
 	fmt.Println("Number of false results: " + strconv.Itoa(trueFalseCount[0]))
 	fmt.Println("Number of true results: " + strconv.Itoa(trueFalseCount[1]))
+}
+
+func TestGamble(test *testing.T) {
+	dbConf, session := models.InitResetDB()
+	names, userColl := models.SeedUsers(dbConf, "gambletestcollection", session)
+
+	_, currBalance, _ := Gamble(names[0], 1000, userColl)
+
+	if currBalance != 100 {
+		test.Fatalf("@Gamble")
+	}
+
+	_, currBalance, _ = Gamble(names[0], -1, userColl)
+
+	if currBalance != 100 {
+		test.Fatalf("@Gamble")
+	}
+
+	outcome, currBalance, _ := Gamble(names[0], 85, userColl)
+
+	if currBalance != 15 && currBalance != 185 {
+		test.Fatalf("@Gamble")
+	}
+
+	if currBalance == 15 {
+		if outcome != false {
+			test.Fatalf("@Gamble")
+		}
+	}
+
+	if currBalance == 185 {
+		if outcome != true {
+			test.Fatalf("@Gamble")
+		}
+	}
+
+	Gamble(names[0], 10, userColl)
 }

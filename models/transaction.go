@@ -12,14 +12,13 @@ type Transaction struct {
 
 // returns true for wins, false for loss, error for failed transactions
 func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collection) (bool, int, error) {
-	if betAmt < 0 {
-		return false, -1, nil // bad arg
-	}
-
 	user := FindOrCreateUser(name, userColl)
 
 	currAmt := user.CurrAmount
 	var newAmt int
+	if betAmt < 0 || betAmt > currAmt {
+		return false, currAmt, nil // bad arg
+	}
 
 	if outcome == true {
 		newAmt = (currAmt + betAmt)
@@ -27,7 +26,7 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 		newAmt = (currAmt - betAmt)
 	}
 
-	if newAmt < 0 || betAmt > currAmt {
+	if newAmt < 0 {
 		return false, currAmt, nil // invalid args
 	}
 

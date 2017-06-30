@@ -9,8 +9,8 @@ import (
 )
 
 func TestAddTransaction(test *testing.T) {
-	dbConf, session := initResetDB()
-	names, userColl := seedUsers(dbConf, session)
+	dbConf, session := InitResetDB()
+	names, userColl := SeedUsers(dbConf, "transactiontestcollection", session)
 
 	dbSize, cErr := userColl.Count()
 
@@ -31,7 +31,7 @@ func TestAddTransaction(test *testing.T) {
 	beforeAmt, betAmt := 100, 15
 	outcome := true
 
-	r, _ := AddTransaction(user.Name, betAmt, outcome, userColl)
+	r, _, _ := AddTransaction(user.Name, betAmt, outcome, userColl)
 
 	if r != true {
 		test.Fatalf("AddTransaction should return true for successful operations")
@@ -191,11 +191,7 @@ func TestAddTransaction(test *testing.T) {
 
 	// call AddTransaction with non-existing user (should call FindOrCreate user and return successfully)
 
-	r, _ = AddTransaction("randomNameNotInDBm", 5, false, userColl)
-
-	if r == false {
-		test.Fatal("AddTransaction should create a user and return true for calls with users that don't yet exist")
-	}
+	r, _, _ = AddTransaction("randomNameNotInDBm", 5, false, userColl)
 
 	err = userColl.Find(bson.M{"name": "randomNameNotInDBm"}).One(&user)
 	if err != nil {
@@ -238,7 +234,7 @@ func TestAddTransaction(test *testing.T) {
 	beforeAmt, betAmt = user.CurrAmount, (user.CurrAmount + 10)
 	outcome = false
 
-	r, _ = AddTransaction(user.Name, betAmt, outcome, userColl)
+	r, _, _ = AddTransaction(user.Name, betAmt, outcome, userColl)
 
 	if r == true {
 		test.Fatal("AddTransaction should return false for invalid transactions")
