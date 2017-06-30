@@ -1,4 +1,4 @@
-package main
+/*package main
 
 import (
 	"bufio"
@@ -67,4 +67,4 @@ func parse(input string) {
 
 func errorMessage() {
 	fmt.Println("please enter 'gamble <number>'")
-}
+}*/
