@@ -21,6 +21,7 @@ func createUser(name string, startingBalance int, userColl *mgo.Collection) (*Us
 	return &user, err
 }
 
+//returns user if found, err if user doesnt exist
 func findUser(name string, userColl *mgo.Collection) (*User, error) {
 	user := User{}
 	err := userColl.Find(bson.M{"name": name}).One(&user)
@@ -28,7 +29,9 @@ func findUser(name string, userColl *mgo.Collection) (*User, error) {
 	return &user, err
 }
 
-// if user exists, returns that user, otherwise creates and returns new user
+/*FindOrCreateUser takes a username and returns the user if found in DB, creates and inserts new one otherwise
+* returns user created/found
+ */
 func FindOrCreateUser(name string, userColl *mgo.Collection) *User {
 	user, err := findUser(name, userColl)
 

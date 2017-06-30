@@ -65,6 +65,14 @@ func TestFindUser(test *testing.T) {
 		test.Fatalf("user returned was supposed to be "+userName+" but was %v", (*user).Name)
 	}
 
+	// test on non-existent user
+
+	user, err = findUser("nonexistenduser", userColl)
+
+	if err == nil {
+		test.Fatalf("findUser should have returned an error")
+	}
+
 }
 
 func TestFindOrCreateUser(test *testing.T) {

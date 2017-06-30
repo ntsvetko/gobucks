@@ -1,7 +1,11 @@
 package models
 
-import "gopkg.in/mgo.v2/bson"
-import "gopkg.in/mgo.v2"
+import (
+	"errors"
+
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
 
 type Transaction struct {
 	AmountBefore  int
@@ -10,14 +14,21 @@ type Transaction struct {
 	AmountAfter   int
 }
 
-// returns true for wins, false for loss, error for failed transactions
+/*AddTransaction takes a any string as a username, any bet amount greater than 0
+* and less than the user's balance
+*
+* if the user specified does not already exist, one will be created with 100 gobucks
+*
+* returns true for wins, false for loss, current user balance, and an error for failed transactions
+*
+ */
 func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collection) (bool, int, error) {
 	user := FindOrCreateUser(name, userColl)
 
 	currAmt := user.CurrAmount
 	var newAmt int
 	if betAmt < 0 || betAmt > currAmt {
-		return false, currAmt, nil // bad arg
+		return false, currAmt, errors.New("bad args") // bad arg
 	}
 
 	if outcome == true {
@@ -27,7 +38,7 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 	}
 
 	if newAmt < 0 {
-		return false, currAmt, nil // invalid args
+		return false, currAmt, errors.New("bad args") // invalid args
 	}
 
 	trans := Transaction{currAmt, betAmt, outcome, newAmt}
