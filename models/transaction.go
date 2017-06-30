@@ -11,9 +11,9 @@ type Transaction struct {
 }
 
 // returns true for wins, false for loss, error for failed transactions
-func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collection) (bool, error) {
+func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collection) (bool, int, error) {
 	if betAmt < 0 {
-		return false, nil // bad arg
+		return false, -1, nil // bad arg
 	}
 
 	user := FindOrCreateUser(name, userColl)
@@ -28,7 +28,7 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 	}
 
 	if newAmt < 0 {
-		return false, nil // invalid args
+		return false, currAmt, nil // invalid args
 	}
 
 	trans := Transaction{currAmt, betAmt, outcome, newAmt}
@@ -36,14 +36,14 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 	err := userColl.Update(bson.M{"name": name}, bson.M{"$push": bson.M{"transactionhistory": trans}})
 
 	if err != nil {
-		return false, err
+		return false, currAmt, err
 	}
 
 	err = userColl.Update(bson.M{"name": name}, bson.M{"$set": bson.M{"curramount": newAmt}})
 
 	if err != nil {
-		return false, err
+		return false, currAmt, err
 	}
 
-	return outcome, nil
+	return outcome, currAmt, nil
 }

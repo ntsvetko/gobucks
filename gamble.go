@@ -20,16 +20,16 @@ func trueOrFalse() bool {
 }
 
 // returns true for win, false for loss, error for failed operation
-func Gamble(name string, bet int, userColl *mgo.Collection) (bool, error) {
+func Gamble(name string, bet int, userColl *mgo.Collection) (bool, int, error) {
 	outcome := trueOrFalse()
-	transaction, err := models.AddTransaction(name, bet, outcome, userColl)
+	transaction, currAmt, err := models.AddTransaction(name, bet, outcome, userColl)
 	if err != nil {
-		return false, err
+		return false, currAmt, err
 	}
 
 	if transaction == false {
-		return false, nil
+		return false, currAmt, nil
 	}
 
-	return true, nil
+	return true, currAmt, nil
 }
