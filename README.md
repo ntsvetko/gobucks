@@ -2,6 +2,7 @@
 Natalie and Vlad learn Go, inspired by everyone's favorite slackbot, mongobucks :).
 
 ## How To Use
+* go get github.com/ntsvetko/gobucks
 * make sure that you have an instance of mongo running
 * install dependencies
   * run `go get github.com/tools/godep`
