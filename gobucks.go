@@ -6,6 +6,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/gobucks/models"
 )
 
 func main() {
@@ -14,10 +16,10 @@ func main() {
 		return
 	}
 	username := os.Args[1]
-	session := connectToMongo("mongodb://localhost")
+	session := models.ConnectToMongo("mongodb://localhost")
 	defer session.Close()
-	coll := getColl(session, "gobucks", "users")
-	user := findOrCreateUser(username, coll)
+	coll := models.GetColl(session, "gobucks", "users")
+	user := models.FindOrCreateUser(username, coll)
 	fmt.Println(user)
 	repl(user.Name)
 }

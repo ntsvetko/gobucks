@@ -1,4 +1,4 @@
-package main
+package models
 
 import mgo "gopkg.in/mgo.v2"
 
@@ -16,7 +16,7 @@ func getDbConfig() dbConfig {
 
 func initResetDB() (dbConfig, *mgo.Session) {
 	dbConf := getDbConfig()
-	session := connectToMongo(dbConf.uri)
+	session := ConnectToMongo(dbConf.uri)
 
 	session.DB(dbConf.dbName).DropDatabase()
 	return dbConf, session
@@ -29,7 +29,7 @@ func seedUsers(dbConf dbConfig, session *mgo.Session) ([]string, *mgo.Collection
 	var users = [10]*User{}
 
 	for i := 0; i < len(names); i++ {
-		users[i] = findOrCreateUser(names[i], userColl)
+		users[i] = FindOrCreateUser(names[i], userColl)
 	}
 
 	return names, userColl
