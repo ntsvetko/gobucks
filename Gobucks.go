@@ -125,7 +125,7 @@ func concurrentGamble(user string, amount int) {
 		time.Sleep(time.Second * 1) // wait a second because you can't have instant gratification...
 		win, newAmt, err := Gamble(user, amount, session, databaseString, collectionString)
 		if err != nil {
-			fmt.Print("ERROR: Something went wrong when gambling: ")
+			fmt.Print("ERROR: ")
 			log.Println(err)
 			return
 		}
