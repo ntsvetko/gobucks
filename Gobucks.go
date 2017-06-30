@@ -71,6 +71,8 @@ func repl(user string) {
 		userDone[user] <- true
 	}
 	scanner := bufio.NewScanner(os.Stdin)
+	balance := Balance(user, session, databaseString, collectionString)
+	fmt.Println(user + "'s balance: " + strconv.Itoa(balance))
 	fmt.Print(user + "> ")
 	for scanner.Scan() {
 		input := scanner.Text()
