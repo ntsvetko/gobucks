@@ -45,5 +45,5 @@ func AddTransaction(name string, betAmt int, outcome bool, userColl *mgo.Collect
 		return false, currAmt, err
 	}
 
-	return outcome, currAmt, nil
+	return outcome, newAmt, nil
 }
