@@ -8,6 +8,6 @@ script:
   - tar zxf mongodb.tgz
   - mv mongodb-* mongodb
   - chmod +x mongodb/bin
-  - mkdir -p data/db
+  - mkdir -p /data/db
   - mongod
   - go test -v ./...
