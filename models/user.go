@@ -13,6 +13,8 @@ type User struct {
 	CurrAmount         int
 }
 
+const INITIAL_AMOUNT = 10000
+
 // creates and adds user to db, does NOT check if user already exists
 func createUser(name string, startingBalance int, userColl *mgo.Collection) (*User, error) {
 	user := User{name, []Transaction{}, startingBalance}
@@ -39,7 +41,7 @@ func FindOrCreateUser(name string, userColl *mgo.Collection) *User {
 		return user
 	}
 
-	user, err = createUser(name, 100, userColl)
+	user, err = createUser(name, INITIAL_AMOUNT, userColl)
 
 	if err != nil {
 		log.Fatal(err)

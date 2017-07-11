@@ -5,9 +5,14 @@ import (
 	"flag"
 	"fmt"
 	"github.com/ntsvetko/gobucks/models"
+	//"github.com/pkg/profile"
 	"gopkg.in/mgo.v2"
 	"log"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
+	//"runtime"
+	"runtime/pprof"
 	"strconv"
 	"strings"
 	"sync"
@@ -36,6 +41,19 @@ func main() {
 		fmt.Println("usage: './gobucks -c <filepath>' or './gobucks <user>'")
 		return
 	}
+
+	cpuprofile := "gobucks.prof"
+	f, err := os.Create(cpuprofile)
+	if err != nil {
+		log.Fatal(err)
+	}
+	//runtime.SetCPUProfileRate(100000000)
+	pprof.StartCPUProfile(f)
+	defer pprof.StopCPUProfile()
+
+	go func() { // run an http server, needed for profiling
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
 
 	concurrent := flag.Bool("c", false, "take in a file with gamble commands")
 	flag.Parse()
@@ -123,13 +141,16 @@ func parse(input string) {
 * takes in a user and an amount to gamble
  */
 func concurrentGamble(user string, amount int) {
+	rwm.Lock()
+	channel := userDone[user]
+	rwm.Unlock()
 	select {
-	case <-userDone[user]:
+	case <-channel:
 		defer func() {
-			userDone[user] <- true
+			channel <- true
 		}()
 		defer wg.Done()
-		time.Sleep(time.Second * 1) // wait a second because you can't have instant gratification...
+		time.Sleep(time.Second * 2) // wait a second because you can't have instant gratification...
 		win, newAmt, err := Gamble(user, amount, session, databaseString, collectionString)
 		if err != nil {
 			fmt.Print("ERROR: ")
