@@ -13,7 +13,7 @@ type User struct {
 	CurrAmount         int
 }
 
-const INITIAL_AMOUNT = 10000
+const INITIAL_AMOUNT = 100
 
 // creates and adds user to db, does NOT check if user already exists
 func createUser(name string, startingBalance int, userColl *mgo.Collection) (*User, error) {
